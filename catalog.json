@@ -1,0 +1,30 @@
+{
+    "folders": [
+        {
+            "title" : "08.03",
+            "notes" : [
+                {
+                    "title" : "Kernel Development",
+                    "contents" : "Try to implement an IPC and to rewrite a bootloader. It behaves unexpectedly."
+                },
+                {
+                    "title" : "Writing Penis Music",
+                    "contents" : "Write a simple song in 'Penis Music' genre."
+                }
+            ]
+        },
+        {
+            "title" : "09.04",
+            "notes" : [
+                {
+                    "title" : "Shopping",
+                    "contents" : "Buy cheese, milk, butter and beer."
+                },
+                {
+                    "title" : "School lessons",
+                    "contents" : "Solve 3 test variants of informatics EGE."
+                }
+            ]
+        }
+    ]
+}
