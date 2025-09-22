@@ -11,6 +11,7 @@ pub struct TodoApplication {
     folders: Option<Vec<Folder>>,
     catalog_path: String,
     current_opened_folder: Option<Folder>,
+    cmd_history: Vec<Vec<String>>,
 }
 
 impl TodoApplication {
@@ -20,6 +21,7 @@ impl TodoApplication {
             folders: None,
             catalog_path: String::new(),
             current_opened_folder: None,
+            cmd_history: vec![],
         }
     }
 
@@ -37,32 +39,50 @@ impl TodoApplication {
                 .unwrap();
             std::io::stdout().flush().unwrap();
             let mut command = String::new();
+            let mut command_argv: Vec<String> = vec![];
 
             std::io::stdin().read_line(&mut command).unwrap();
+            command_argv = command.strip_suffix("\n").unwrap().split(" ").map(|s|{ s.to_string() }).collect();
 
-            match command.strip_suffix("\n").unwrap().to_string().as_str() {
+            match command_argv[0].as_str() {
                 "exit" | "q" | "quit" => {
                     std::println!("Quitting... Bye!");
                     self.quit();
                 }
-                "lf" => {
-                    match &self.folders {
-                        Some(folders) => {
-                            std::println!("Available folders:");
-                            for (index, folder) in folders.iter().enumerate() {
-                                std::println!("\t{}. {}", index + 1, folder.title);
-                            }
-                        }
-
-                        None => {
-                            std::println!("No folders.");
+                "lf" => match &self.folders {
+                    Some(folders) => {
+                        std::println!("Available folders:");
+                        for (index, folder) in folders.iter().enumerate() {
+                            std::println!("\t{}. {}", index + 1, folder.title);
                         }
                     }
 
+                    None => {
+                        std::println!("No folders.");
+                    }
+                },
+                "o" | "open" => {
+                    // self.current_opened_folder = Some(self.folders.as_ref().unwrap()[0]);
+                    let folder_ind: i32 = command_argv[1].trim().parse::<i32>().unwrap() - 1;
+                    if folder_ind >= 0 && folder_ind < self.folders.as_ref().unwrap().len() as i32 {
+                        self.current_opened_folder = Some( self.folders.as_ref().unwrap()[folder_ind as usize].clone() );
+                    } else {
+                        std::println!("Invalid folder index!");
+                    }
                 }
-                "o" | "open"  => {}
                 "e" | "edit" => {}
-                "ln" => {}
+                "ln" => {
+                   match &self.current_opened_folder {
+                        Some(folder) => {
+                            for (index, note) in folder.notes.iter().enumerate() {
+                                note.print(index + 1);
+                            }
+                        }
+                        None => {
+
+                        }
+                   }
+                }
                 "c" | "create" => {}
                 "cf" => {}
                 "clear" => {
